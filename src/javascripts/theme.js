@@ -60,5 +60,34 @@ $(document).ready(function() {
     }
   })
 
+  $("a.no-jump").each(function () {
+      $(this).attr('href');     //修改<a>的 href属性值为 #  这样状态栏不会显示链接地址
+      $(this).click(function (event) {
+        event.preventDefault();   // 如果<a>定义了 target="_blank“ 需要这句来阻止打开新页面
+      });
+  });
+  /**
+   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[status_id]=18
+   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[assigned_to_id]=46
+   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[done_ratio]=20
+   */
+
+
+  function getMenu(id=33) {
+    var url = location.origin + '/redmine4/issues/context_menu';
+    var token = $('input[name=authenticity_token]').val();
+    var data = 'authenticity_token=' + token +  "&ids[]=" + id;
+    $.ajax({
+      url: url,
+      data: data,
+      success: function(data, textStatus, jqXHR) {
+        $('#sidebar').html(data);
+
+      }
+    });
+  }
+  getMenu(33)
+
+
 
 })
