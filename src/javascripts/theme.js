@@ -73,7 +73,7 @@ $(document).ready(function() {
    */
 
 
-  function getMenu(id=33) {
+  function getMyMenu(id=33) {
     var url = location.origin + '/redmine4/issues/context_menu';
     var token = $('input[name=authenticity_token]').val();
     var data = 'authenticity_token=' + token +  "&ids[]=" + id;
@@ -83,11 +83,36 @@ $(document).ready(function() {
       success: function(data, textStatus, jqXHR) {
         $('#sidebar').html(data);
 
+        var textArea = '<textarea id="my-notes" rows="10" cols="30">\n' +
+            '' +
+            '</textarea><input type="submit" name="commit" value="提交" onclick="writeMyNote('+id+')">'
+
       }
     });
   }
-  getMenu(33)
+  getMyMenu(33)
 
+
+  function writeMyNote(id=33) {
+    var url = location.origin + '/redmine4/issues/33';
+    var token = $('input[name=authenticity_token]').val();
+    var form = new FormData();
+    var note = $('#my-notes').val();
+    form.append('utf8', '✓');
+    form.append('_method', 'patch');
+    form.append('authenticity_token', token);
+    form.append('issue[notes]', note);
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: form,
+      success: function(data, textStatus, jqXHR) {
+        $('#sidebar').html(data);
+
+      }
+    });
+  }
 
 
 })

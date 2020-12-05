@@ -3,6 +3,25 @@
 
 
 #sidebar .icon-checked.disabled {
+    background-image:none;
+    background-color: #2996cc;
+    color: #fff;
+}
 
+#sidebar>ul>li>a {
+    color: #333 !important;
+}
+
+
+#sidebar>ul>li{
+    background-color: white;
+    margin: 10px 0px;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+#sidebar>ul>li>ul>li {
+    display: inline-block;
+    padding-right: 10px;
 }
  
