@@ -30,7 +30,7 @@ $(document).ready(function() {
     }
 
     if ($(item).text() == 'Closed') {
-      $(item).parent().find('a').css({ 'color': '#eee', 'background': '#666' });
+      $(item).parent().find('a:not(.js-contextmenu)').css({ 'color': '#eee', 'background': '#666' });
     }
 
 
@@ -59,6 +59,29 @@ $(document).ready(function() {
       $(item).css('color', 'red');
     }
   })
+
+
+  // 点击某一行
+  $(".issues.list tr" ).on("click", function() {
+    console.log( $(this).find('td.id').text() );
+    var currId = $(this).find('td.id').text();
+
+    var statusAction = '/issues/bulk_update?back_url=' + encodeURIComponent('/projects/syh/issues?c[]=tracker&c[]=status&c[]=priority&c[]=subject&c[]=assigned_to&c[]=updated_on&c[]=done_ratio&c[]=author&f[]=status_id&f[]=assigned_to_id&f[]=&group_by=category&op[assigned_to_id]==&op[status_id]=!&set_filter=1&sort=id:desc&t[]=&v[assigned_to_id][]=me&v[status_id][]=5&ids[]='+currId+'&issue[status_id]=')
+    var statusLink = '<ul>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'1">New</a></li>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'2">In Progress</a></li>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'3">Resolved</a></li>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'4">Feedback</a></li>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'5">Closed</a></li>\n' +
+        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'6">Rejected</a></li>\n' +
+        '    </ul>'
+    if ( $("#action-box").length > 0 ) {
+      $("#action-box").html(statusLink);
+    } else {
+      $('#sidebar').append('<div id="action-box">'+statusLink+'</div>')
+    }
+
+  });
 
   $("a.no-jump").each(function () {
       $(this).attr('href');     //修改<a>的 href属性值为 #  这样状态栏不会显示链接地址
