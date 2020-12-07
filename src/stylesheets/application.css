@@ -2,26 +2,25 @@
 @import url(../../../stylesheets/application.css);
 
 
-#sidebar .icon-checked.disabled {
+#action-box .icon-checked.disabled {
     background-image:none;
     background-color: #2996cc;
     color: #fff;
 }
 
-#sidebar>ul>li>a {
+#action-box>ul>li>a {
     color: #333 !important;
 }
 
 
-#sidebar>ul>li{
+#action-box>ul>li{
     background-color: white;
-    margin: 10px 0px;
-    padding: 10px;
-    border-radius: 6px;
+    margin: 5px 0px !important;
+    padding: 5px !important;
+    border-radius: 5px;
 }
 
-#sidebar>ul>li>ul>li {
+#action-box>ul>li>ul>li {
     display: inline-block;
-    padding-right: 10px;
+    padding-right: 5px;
 }
- 

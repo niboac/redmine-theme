@@ -61,33 +61,11 @@ $(document).ready(function() {
   })
 
 
-  // 点击某一行
-  $(".issues.list tr" ).on("click", function() {
-    console.log( $(this).find('td.id').text() );
-    var currId = $(this).find('td.id').text();
-
-    var statusAction = '/issues/bulk_update?back_url=' + encodeURIComponent('/projects/syh/issues?c[]=tracker&c[]=status&c[]=priority&c[]=subject&c[]=assigned_to&c[]=updated_on&c[]=done_ratio&c[]=author&f[]=status_id&f[]=assigned_to_id&f[]=&group_by=category&op[assigned_to_id]==&op[status_id]=!&set_filter=1&sort=id:desc&t[]=&v[assigned_to_id][]=me&v[status_id][]=5&ids[]='+currId+'&issue[status_id]=')
-    var statusLink = '<ul>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'1">New</a></li>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'2">In Progress</a></li>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'3">Resolved</a></li>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'4">Feedback</a></li>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'5">Closed</a></li>\n' +
-        '        <li><a class="" rel="nofollow" data-method="post" href="'+statusAction+'6">Rejected</a></li>\n' +
-        '    </ul>'
-    if ( $("#action-box").length > 0 ) {
-      $("#action-box").html(statusLink);
-    } else {
-      $('#sidebar').append('<div id="action-box">'+statusLink+'</div>')
-    }
-
-  });
-
   $("a.no-jump").each(function () {
-      $(this).attr('href');     //修改<a>的 href属性值为 #  这样状态栏不会显示链接地址
-      $(this).click(function (event) {
-        event.preventDefault();   // 如果<a>定义了 target="_blank“ 需要这句来阻止打开新页面
-      });
+    $(this).attr('href');     //修改<a>的 href属性值为 #  这样状态栏不会显示链接地址
+    $(this).click(function (event) {
+      event.preventDefault();   // 如果<a>定义了 target="_blank“ 需要这句来阻止打开新页面
+    });
   });
   /**
    * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[status_id]=18
@@ -96,28 +74,49 @@ $(document).ready(function() {
    */
 
 
-  function getMyMenu(id=33) {
-    var url = location.origin + '/redmine4/issues/context_menu';
+  // 点击某一行
+  $(".issues.list tr" ).on("click", function() {
+    console.log( $(this).find('td.id').text() );
+    var currId = $(this).find('td.id').text();
+    var currSubject = $(this).find('td.subject').html();
+    getMyMenu(currId, currSubject)
+    localStorage.setItem("currentId", currId);
+    localStorage.setItem("currentSubject", currSubject);
+  });
+  var currentId = localStorage.getItem("currentId");
+  var currentSubject = localStorage.getItem("currentSubject");
+  if(currentId && currentSubject) {
+    getMyMenu(currentId, currentSubject)
+  }
+
+  function getMyMenu(id, currSubject) {
+    var url = location.origin + '/issues/context_menu';
     var token = $('input[name=authenticity_token]').val();
     var data = 'authenticity_token=' + token +  "&ids[]=" + id;
     $.ajax({
       url: url,
       data: data,
       success: function(data, textStatus, jqXHR) {
-        $('#sidebar').html(data);
 
         var textArea = '<textarea id="my-notes" rows="10" cols="30">\n' +
             '' +
             '</textarea><input type="submit" name="commit" value="提交" onclick="writeMyNote('+id+')">'
 
+        var html = '<div ></div><div style="border-top: 1px solid #ddd;width:100%;margin-top: 5px;"><b>['+id+']</b>'+currSubject + '</div>' + data + textArea
+        if ( $("#action-box").length > 0 ) {
+          $("#action-box").html(html);
+        } else {
+          if ( $("#sidebar").length > 0 ) {
+            $('#sidebar').append('<div id="action-box">'+html+'</div>')
+          }
+        }
+
       }
     });
   }
-  getMyMenu(33)
 
-
-  function writeMyNote(id=33) {
-    var url = location.origin + '/redmine4/issues/33';
+  function writeMyNote(id) {
+    var url = location.origin + '/issues/'+id;
     var token = $('input[name=authenticity_token]').val();
     var form = new FormData();
     var note = $('#my-notes').val();
@@ -125,15 +124,18 @@ $(document).ready(function() {
     form.append('_method', 'patch');
     form.append('authenticity_token', token);
     form.append('issue[notes]', note);
-
     $.ajax({
       url: url,
       type: 'POST',
       data: form,
+      contentType: false,
+      processData: false,
+      cache: false,
       success: function(data, textStatus, jqXHR) {
-        $('#sidebar').html(data);
-
+        $('#my-notes').val('')
       }
+    }).fail(function(err) {
+      console.log(err);
     });
   }
 
