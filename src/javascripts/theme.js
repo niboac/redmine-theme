@@ -1,5 +1,7 @@
 $(document).ready(function() {
   localStorage.getItem("myName");
+  var kingDueDaysObj = {'1天后': 1, '2天后': 2, '3天后': 3, '4天后': '4', '5天后': 5, '1周后': 7, '2周后': 14, '3周后': 21, '4周后': 28,
+    '5周后': 35, '6周后': 42, '7周后': 49, '2月后': 60, '3月后': 90};
 
   document.querySelectorAll('.issues.list tr td.status').forEach(item => {
 
@@ -104,6 +106,10 @@ $(document).ready(function() {
           $("#action-box a:contains('类别')").parent().remove();
           $("#action-box a:contains('跟踪')").parent().remove();
           $("#action-box a:contains('目标版本')").parent().remove();
+          $("#action-box a:contains('% 完成')").parent().find('li>a').each(function() {
+            $(this).text($(this).text().replace('%', ''));
+
+          })
           $("#action-box a.icon-fav-off").parent().remove();
           $("#action-box a.icon-del").parent().remove();
           $("#action-box a.icon-add").parent().parent().parent().remove();
@@ -172,4 +178,11 @@ function writeMyNote(id) {
   }).fail(function(err) {
     console.log(err);
   });
+}
+
+
+function myIssueDueDate() {
+  var now = new Date().valueOf();
+  var newDate = new Date(now + kingDueDaysObj[due]*24*3600*1000);
+  return newDate.getFullYear()+'-'+(newDate.getMonth()+1)+'-'+newDate.getDate();
 }
