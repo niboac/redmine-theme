@@ -87,7 +87,7 @@ $(document).ready(function() {
       data: data,
       success: function(data, textStatus, jqXHR) {
 
-        var textArea = '<textarea id="my-notes" rows="10" cols="30">\n' +
+        var textArea = '<textarea id="my-notes" rows="5" cols="36">\n' +
             '' +
             '</textarea><input type="submit" class="king-submit-note" name="commit" value="提交回复" onclick="writeMyNote('+id+')"><span class="king-submit-result"></span>'
 

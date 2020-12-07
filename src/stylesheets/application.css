@@ -1,6 +1,25 @@
 /* load the default Redmine stylesheet */
 @import url(../../../stylesheets/application.css);
 
+@media screen and (max-width: 1599px) and (min-width: 1280px) {
+    #sidebar {
+        width: 322px;
+    }
+}
+
+#sidebar {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+#sidebar .queries {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#sidebar .queries>li {
+    width: 150px;
+}
 
 #action-box .icon-checked.disabled {
     background-image:none;
