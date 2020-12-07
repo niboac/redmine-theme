@@ -3,6 +3,8 @@ $(document).ready(function() {
   var kingDueDaysObj = {'1天后': 1, '2天后': 2, '3天后': 3, '4天后': '4', '5天后': 5, '1周后': 7, '2周后': 14, '3周后': 21, '4周后': 28,
     '5周后': 35, '6周后': 42, '7周后': 49, '2月后': 60, '3月后': 90};
 
+  $('#content #update').show();
+
   document.querySelectorAll('.issues.list tr td.status').forEach(item => {
 
     if ($(item).text() == 'New') {
