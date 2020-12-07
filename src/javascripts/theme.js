@@ -60,20 +60,6 @@ $(document).ready(function() {
     }
   })
 
-
-  $("a.no-jump").each(function () {
-    $(this).attr('href');     //修改<a>的 href属性值为 #  这样状态栏不会显示链接地址
-    $(this).click(function (event) {
-      event.preventDefault();   // 如果<a>定义了 target="_blank“ 需要这句来阻止打开新页面
-    });
-  });
-  /**
-   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[status_id]=18
-   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[assigned_to_id]=46
-   * /redmine4/issues/bulk_update?back_url=/redmine4/issues&ids[]=33&issue[done_ratio]=20
-   */
-
-
   // 点击某一行
   $(".issues.list tr" ).on("click", function() {
     console.log( $(this).find('td.id').text() );
@@ -83,12 +69,15 @@ $(document).ready(function() {
     localStorage.setItem("currentId", currId);
     localStorage.setItem("currentSubject", currSubject);
   });
+
+  // 记住上次点击的位置,右侧仍然显示上次的id
   var currentId = localStorage.getItem("currentId");
   var currentSubject = localStorage.getItem("currentSubject");
   if(currentId && currentSubject) {
     getMyMenu(currentId, currentSubject)
   }
 
+  // 获取菜单列表
   function getMyMenu(id, currSubject) {
     var url = location.origin + '/issues/context_menu';
     var token = $('input[name=authenticity_token]').val();
@@ -118,37 +107,22 @@ $(document).ready(function() {
           $("#action-box a.icon-fav-off").parent().remove();
           $("#action-box a.icon-del").parent().remove();
           $("#action-box a.icon-add").parent().parent().parent().remove();
+
+          $("#action-box a:contains('指派给')").parent().find('li>a').on("click", function() {
+            saveAssigns($(this).text())
+          });
+
+          $("#action-box a:contains('指派给')").parent().find('li>a:not(.disabled)').each(function() {
+            var name = $(this).text();
+            var arr = getAssigns();
+            if(!arr.includes(name)) {
+              $(this).css({'color': '#bbb'})
+            }
+          })
+
         },100)
 
       }
-    });
-  }
-
-  function writeMyNote(id) {
-    var url = location.origin + '/issues/'+id;
-    var token = $('input[name=authenticity_token]').val();
-    var form = new FormData();
-    var note = $('#my-notes').val();
-    form.append('utf8', '✓');
-    form.append('_method', 'patch');
-    form.append('authenticity_token', token);
-    form.append('issue[notes]', note);
-    $.ajax({
-      url: url,
-      type: 'POST',
-      data: form,
-      contentType: false,
-      processData: false,
-      cache: false,
-      success: function(data, textStatus, jqXHR) {
-        $('#my-notes').val('')
-        $('.king-submit-result').val('发布成功!');
-        setTimeout(() => {
-          $('.king-submit-result').val('');
-        }, 3000)
-      }
-    }).fail(function(err) {
-      console.log(err);
     });
   }
 
@@ -161,7 +135,8 @@ $(document).ready(function() {
     let arr = getAssigns() || [];
     if(!arr.includes(name)) {
       arr.push(name);
-      if(arr.length>10) {
+      if(arr.length>8) {
+        // 最多8个常用联系人
         arr.shift()
       }
     }
@@ -170,3 +145,31 @@ $(document).ready(function() {
 
 
 })
+
+function writeMyNote(id) {
+  var url = location.origin + '/issues/'+id;
+  var token = $('input[name=authenticity_token]').val();
+  var form = new FormData();
+  var note = $('#my-notes').val();
+  form.append('utf8', '✓');
+  form.append('_method', 'patch');
+  form.append('authenticity_token', token);
+  form.append('issue[notes]', note);
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: form,
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function(data, textStatus, jqXHR) {
+      $('#my-notes').val('')
+      $('.king-submit-result').html('<span style="color:red;padding-left: 20px;">发布成功!</span>');
+      setTimeout(() => {
+        $('.king-submit-result').html('');
+      }, 3000)
+    }
+  }).fail(function(err) {
+    console.log(err);
+  });
+}
