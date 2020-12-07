@@ -100,7 +100,7 @@ $(document).ready(function() {
 
         var textArea = '<textarea id="my-notes" rows="10" cols="30">\n' +
             '' +
-            '</textarea><input type="submit" name="commit" value="提交" onclick="writeMyNote('+id+')">'
+            '</textarea><input type="submit" class="king-submit-note" name="commit" value="提交回复" onclick="writeMyNote('+id+')"><span class="king-submit-result"></span>'
 
         var html = '<div ></div><div style="border-top: 1px solid #ddd;width:100%;margin-top: 5px;"><b>['+id+']</b>'+currSubject + '</div>' + data + textArea
         if ( $("#action-box").length > 0 ) {
@@ -110,6 +110,15 @@ $(document).ready(function() {
             $('#sidebar').append('<div id="action-box">'+html+'</div>')
           }
         }
+
+        setTimeout(()=>{
+          $("#action-box a:contains('类别')").parent().remove();
+          $("#action-box a:contains('跟踪')").parent().remove();
+          $("#action-box a:contains('目标版本')").parent().remove();
+          $("#action-box a.icon-fav-off").parent().remove();
+          $("#action-box a.icon-del").parent().remove();
+          $("#action-box a.icon-add").parent().parent().parent().remove();
+        },100)
 
       }
     });
@@ -133,10 +142,30 @@ $(document).ready(function() {
       cache: false,
       success: function(data, textStatus, jqXHR) {
         $('#my-notes').val('')
+        $('.king-submit-result').val('发布成功!');
+        setTimeout(() => {
+          $('.king-submit-result').val('');
+        }, 3000)
       }
     }).fail(function(err) {
       console.log(err);
     });
+  }
+
+
+  function getAssigns() {
+    return JSON.parse(localStorage.getItem("assignList") || '[]')
+  }
+
+  function saveAssigns(name) {
+    let arr = getAssigns() || [];
+    if(!arr.includes(name)) {
+      arr.push(name);
+      if(arr.length>10) {
+        arr.shift()
+      }
+    }
+    localStorage.setItem("assignList", JSON.stringify(arr));
   }
 
 
