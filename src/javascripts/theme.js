@@ -97,10 +97,12 @@ $(document).ready(function() {
 
         var html = '<div ></div><div style="border-top: 1px solid #ddd;width:100%;margin-top: 5px;"><b>['+id+']</b>'+currSubject + '</div>' + data + textArea
         if ( $("#action-box").length > 0 ) {
+          $("#action-box").fadeOut(100);
           $("#action-box").html(html);
         } else {
           if ( $("#sidebar").length > 0 ) {
-            $('#sidebar').append('<div id="action-box">'+html+'</div>')
+            $("#action-box").fadeOut(100);
+            $('#sidebar').append('<div id="action-box" style="display: none;">'+html+'</div>')
           }
         }
 
@@ -128,7 +130,11 @@ $(document).ready(function() {
             }
           })
 
-        },100)
+          setTimeout(() =>{
+            $("#action-box").fadeIn(100);
+          }, 20)
+
+        },1)
 
       }
     });
