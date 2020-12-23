@@ -43,3 +43,71 @@
     display: inline-block;
     padding-right: 5px;
 }
+
+#tab-content-history .note-header .user {
+    background: #2996cc;
+    display: inline-block;
+    height: 42px;
+    width: 42px;
+    border-radius: 50%;
+    line-height: 42px;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+}
+
+.user-back1 {
+    background: #DC143C !important;
+}
+.user-back2 {
+    background: #BA55D3 !important;
+}
+.user-back3 {
+    background: #9932CC !important;
+}
+.user-back4 {
+    background: #7B68EE !important;
+}
+.user-back5 {
+    background: #0000CD !important;
+}
+.user-back6 {
+    background: #4169E1 !important;
+}
+.user-back7 {
+    background: #00BFFF !important;
+}
+.user-back8 {
+    background: #3CB371 !important;
+}
+.user-back9 {
+    background: #228B22 !important;
+}
+.user-back10 {
+    background: #DAA520 !important;
+}
+.user-back11 {
+    background: #FFA500 !important;
+}
+.user-back12 {
+    background: #FF8C00 !important;
+}
+.user-back13 {
+    background: #D2691E !important;
+}
+.user-back0 {
+    background: #FF4500 !important;
+}
+
+#tab-content-history ul.details, #tab-content-history .wiki p {
+    margin-block-start: 0;
+    margin-bottom: 0;
+}
+
+#tab-content-history .wiki p {
+    padding-left: 23px;
+}
+
+#tab-content-history ul.details i {
+    color: chocolate;
+}

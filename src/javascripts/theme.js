@@ -6,7 +6,7 @@ $(document).ready(function() {
   $('#content #update').show();
 
   document.querySelectorAll('.issues.list tr td.status').forEach(item => {
-
+    // 替换表格每行的颜色
     if ($(item).text() == 'New') {
       $(item).parent().find('a').css('color', 'green');
       $(item).css('color', 'green');
@@ -18,13 +18,13 @@ $(document).ready(function() {
     }
 
     if ($(item).text() == 'In Progress') {
-      $(item).parent().find('a').css('color', '#5EC6DB');
-      $(item).css('color', '#5EC6DB');
+      $(item).parent().find('a').css('color', '#169');
+      $(item).css('color', '#169');
     }
 
     if ($(item).text() == 'Feedback') {
-      $(item).parent().find('a').css('color', '#aaa');
-      $(item).css('color', '#aaa');
+      $(item).parent().find('a').css('color', '#999');
+      $(item).css('color', '#999');
     }
 
     if ($(item).text() == 'Rejected') {
@@ -41,20 +41,21 @@ $(document).ready(function() {
   })
 
   document.querySelectorAll('.issues.list tr td.tracker').forEach(item => {
-
+    // 将bug替换成图标
     if ($(item).text() == 'Bug') {
       $(item).text('🐞');
     }
   })
 
   document.querySelectorAll('.issues.list tr td.assigned_to a').forEach(item => {
-
+    // 替换@我
     if ($(item).text() == localStorage.getItem("myName")) {
       $(item).html("<span style='color:red;'>@我️</span>");
     }
   })
 
   document.querySelectorAll('.issues.list tr td.priority').forEach(item => {
+    // 高优先级的颜色为红色
     if ($(item).text() == 'High') {
       $(item).css('color', '#DB5959');
     }
@@ -64,7 +65,7 @@ $(document).ready(function() {
     }
   })
 
-  // 点击某一行
+  // 点击某一行,右侧显示快捷菜单
   $(".issues.list tr" ).on("click", function() {
     console.log( $(this).find('td.id').text() );
     var currId = $(this).find('td.id').text();
@@ -156,6 +157,24 @@ $(document).ready(function() {
     }
     localStorage.setItem("assignList", JSON.stringify(arr));
   }
+
+  $('#tab-content-history .note-header').each(function (item) {
+     var content = $(this).find('.user');
+     var name = content.text();
+     content.addClass('user-back' + (name.charCodeAt()%12));
+     var time = $(this).find('a').eq(1);
+     var detail = $(this).parent().find('.details');
+     var wiki = $(this).parent().find('.wiki');
+     time.css("float","right")
+     detail.css("flex","1")
+     wiki.css("flex","1")
+     $(this).css("display","flex")
+     $(this).html('');
+     $(this).append(content);
+     $(this).append(detail);
+     $(this).append(wiki);
+     $(this).append(time);
+  })
 
 
 })
